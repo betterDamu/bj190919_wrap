@@ -6,23 +6,24 @@
             </div>
         </header>
         <section class="profile-number">
-            <router-link to="/login" class="profile-link">
+            <!--vue-router3.0 之后也可以支持-->
+            <a @click="goto(`/Login`)" class="profile-link">
                 <div class="profile_image">
                     <i class="iconfont icon-person"></i>
                 </div>
                 <div class="user-info">
                     <p class="user-info-top">登录/注册</p>
                     <p>
-            <span class="user-icon">
-              <i class="iconfont icon-shouji icon-mobile"></i>
-            </span>
+                        <span class="user-icon" style="margin-right: 10px">
+                          <i  class="iconfont icon-shouji icon-mobile"></i>
+                        </span>
                         <span class="icon-mobile-number">暂无绑定手机号</span>
                     </p>
                 </div>
                 <span class="arrow">
-          <i class="iconfont icon-jiantou1"></i>
-        </span>
-            </router-link>
+                  <i class="iconfont icon-jiantou1"></i>
+                </span>
+            </a>
         </section>
         <section class="profile_info_data border-1px">
             <ul class="info_data_list">
@@ -97,7 +98,13 @@
 
 <script>
     export default {
-        name:"Profile"
+        name:"Profile",
+        methods:{
+            //编程式导航
+            goto(path){
+                this.$router.replace(path)
+            }
+        }
     }
 </script>
 
