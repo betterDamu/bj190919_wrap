@@ -317,7 +317,30 @@
 
 <script>
     export default {
-        name:"Msite"
+        name:"Msite",
+        async mounted(){
+           /*
+            1. 不去配置baseurl
+                http://localhost:3001/position/40.10038,116.36867
+            2. 404 错误!!!
+                http://localhost:3001/position/40.10038,116.36867不是接口
+                ---> 首先确认当前地址 是不是一个 前端路由
+                ---> 判断一下当前这个地址是不是一个 静态资源
+                ---> 判断一下当前这个地址是不是一个 后台服务
+                ---> devserve会认为这个地址是一个未知请求!!!
+
+          */
+
+          /*
+            devserve:
+                proxy:"地址"
+                这会告诉开发服务器将任何未知请求 (没有匹配到静态文件的请求)
+                    代理到http://localhost:4000
+          */
+
+
+            await this.$http.msite.getPosition()
+        }
     }
 </script>
 

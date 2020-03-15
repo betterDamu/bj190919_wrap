@@ -8,7 +8,7 @@ export default (axios,config={})=>{
     const api = config.api;
 
     for(let name in api){
-        const {url,method,isForm,hooks} =api[name];
+        let {url,method,isForm,hooks,crosUrl} =api[name];
         if(hooks){
             api[name].beforeReq = hooks.beforeReq;
             api[name].AfterReq = hooks.AfterReq;
@@ -26,6 +26,15 @@ export default (axios,config={})=>{
                 }
             }else {
                 transformData = data;
+            }
+
+
+            //是否要跨域
+            // url = "/4000/position/1,2"
+            // url = "/4000/4000/position/1,2"
+            if(crosUrl){
+                url = crosUrl + url;
+                crosUrl ="";
             }
 
 
