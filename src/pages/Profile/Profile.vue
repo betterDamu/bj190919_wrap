@@ -1,10 +1,6 @@
 <template>
     <section class="profile">
-        <header class="header">
-            <div class="header_title">
-                <span class="header_title_text">我的</span>
-            </div>
-        </header>
+        <HeaderTop title="我的"></HeaderTop>
         <section class="profile-number">
             <!--vue-router3.0 之后也可以支持-->
             <a @click="goto(`/Login`)" class="profile-link">

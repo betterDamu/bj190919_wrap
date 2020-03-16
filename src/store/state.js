@@ -1,3 +1,5 @@
 export default {
-    test:"test"
+    addressObj:{
+        address:"123"
+    }
 }

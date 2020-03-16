@@ -1,17 +1,17 @@
 <template>
     <div class="msite">
-        <!--首页头部-->
-        <header class="header">
-            <a class="header_search">
-                <i class="iconfont icon-sousuo"></i>
-            </a>
-            <a class="header_title">
-                <span class="header_title_text ellipsis">昌平区北七家宏福科技园(337省道北)</span>
-            </a>
-            <a class="header_login">
-                <span class="header_login_text">登录|注册</span>
-            </a>
-        </header>
+        <HeaderTop class="headerTop" :title="addressObj.address">
+            <template #left>
+                <a class="header_search">
+                    <i class="iconfont icon-sousuo"></i>
+                </a>
+            </template>
+            <template #right>
+                <a class="header_login">
+                    <span class="header_login_text">登录|注册</span>
+                </a>
+            </template>
+        </HeaderTop>
         <!--首页导航-->
         <nav class="msite_nav border-1px">
             <div class="swiper-container">
@@ -316,30 +316,19 @@
 </template>
 
 <script>
+    import {mapState,mapActions} from "vuex";
+    import {GETADDRRSSOBJ} from "store/mutation_types"
     export default {
         name:"Msite",
-        async mounted(){
-           /*
-            1. 不去配置baseurl
-                http://localhost:3001/position/40.10038,116.36867
-            2. 404 错误!!!
-                http://localhost:3001/position/40.10038,116.36867不是接口
-                ---> 首先确认当前地址 是不是一个 前端路由
-                ---> 判断一下当前这个地址是不是一个 静态资源
-                ---> 判断一下当前这个地址是不是一个 后台服务
-                ---> devserve会认为这个地址是一个未知请求!!!
-
-          */
-
-          /*
-            devserve:
-                proxy:"地址"
-                这会告诉开发服务器将任何未知请求 (没有匹配到静态文件的请求)
-                    代理到http://localhost:4000
-          */
-
-
-            await this.$http.msite.getPosition()
+        computed:{
+            ...mapState(["addressObj"])
+        },
+        methods:{
+            ...mapActions([GETADDRRSSOBJ])
+        },
+        mounted(){
+            //转发一个action
+            this[GETADDRRSSOBJ]()
         }
     }
 </script>
@@ -348,14 +337,7 @@
     @import "../../common/stylus/mixins.styl"
     .msite
         width 100%
-        .header
-            background-color #02a774
-            position fixed
-            z-index 100
-            left 0
-            top 0
-            width 100%
-            height 45px
+        .headerTop
             .header_search
                 position absolute
                 left 15px
@@ -366,18 +348,6 @@
                 .icon-sousuo
                     font-size 25px
                     color #fff
-            .header_title
-                position absolute
-                top 50%
-                left 50%
-                transform translate(-50%, -50%)
-                width 50%
-                color #fff
-                text-align center
-                .header_title_text
-                    font-size 20px
-                    color #fff
-                    display block
             .header_login
                 font-size 14px
                 color #fff

@@ -6,6 +6,10 @@ import router from "@/router"
 import store from "@/store"
 
 
+//注册vue的全局组件
+import HeaderTop from "components/HeaderTop/HeaderTop.vue"
+Vue.component("HeaderTop",HeaderTop)
+
 Vue.prototype.$http = http;
 Vue.config.productionTip = false;
 

@@ -31,6 +31,7 @@ module.exports={
             alias: {
                 'components': resolve('src/components'),
                 'pages': resolve('src/pages'),
+                'store': resolve('src/store')
             }
         }
     }
