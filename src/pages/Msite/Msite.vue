@@ -227,6 +227,8 @@
     import {GETADDRRSSOBJ,GETCATEGORIES} from "store/mutation_types"
     import {mapState,mapActions} from "vuex";
     import _ from "lodash";
+    import Swiper from 'swiper';
+    import "swiper/css/swiper.min.css"
     export default {
         name:"Msite",
         computed:{
@@ -243,6 +245,19 @@
             //转发一个action
             this[GETADDRRSSOBJ]();
             this[GETCATEGORIES]();
+
+            //有可能界面还有没渲染成功
+            //这个时候调用swiper可能会滑不动
+            // 当一些动效库 需要保证在界面渲染完的情况下被初始化 在vue中我们有几个方案?
+            setTimeout(()=>{
+                new Swiper ('.swiper-container', {
+                    loop: true, // 循环模式选项
+                    // 如果需要分页器
+                    pagination: {
+                        el: '.swiper-pagination',
+                    }
+                })
+            },2000)
         }
     }
 </script>
