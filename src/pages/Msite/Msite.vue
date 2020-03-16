@@ -37,7 +37,7 @@
                 <i class="iconfont icon-xuanxiang"></i>
                 <span class="shop_header_title">附近商家</span>
             </div>
-            <div class="shop_container">
+            <div class="shop_container" ref="shopContainer">
                 <ul class="shop_list">
                     <li class="shop_li border-1px" v-for="(shop,index) in shops" :key="index">
                         <a>
@@ -95,6 +95,7 @@
     import Swiper from 'swiper';
     import "swiper/css/swiper.min.css";
     import stars from "components/ele-stars/ele-stars"
+    import BScroll from "better-scroll";
     export default {
         name:"Msite",
         computed:{
@@ -111,13 +112,21 @@
                         el: '.swiper-pagination',
                     }
                 })
+            },
+            renderShopsScroll(){
+                new BScroll(this.$refs.shopContainer,{
+                    click:true
+                })
             }
         },
         async mounted(){
             this[GETADDRRSSOBJ]();
-            this[GETSHOPS]();
+
             await this[GETCATEGORIES](this.renderSwiper);
-            this.renderSwiper()
+            this.renderSwiper();
+
+            await this[GETSHOPS]();
+            this.renderShopsScroll()
         },
         components:{
             "ele-stars":stars
@@ -129,6 +138,9 @@
     @import "../../common/stylus/mixins.styl"
     .msite
         width 100%
+        height 100%
+        overflow hidden
+        position relative
         .headerTop
             .header_search
                 position absolute
@@ -188,6 +200,11 @@
                         background #02a774
         .msite_shop_list
             top-border-1px(#e4e4e4)
+            position absolute
+            left 0
+            right 0
+            top 245px
+            bottom 50px
             margin-top 10px
             background #fff
             .shop_header
@@ -200,7 +217,12 @@
                     font-size 14px
                     line-height 20px
             .shop_container
-                margin-bottom 50px
+                overflow hidden
+                position absolute
+                left 0
+                right 0
+                top 30px
+                bottom 0px
                 .shop_list
                     .shop_li
                         bottom-border-1px(#f1f1f1)
