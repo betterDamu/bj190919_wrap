@@ -4,16 +4,22 @@
             <div class="login_header">
                 <h2 class="login_logo">硅谷外卖</h2>
                 <div class="login_header_title">
-                    <a href="javascript:;" class="on">短信登录</a>
-                    <a href="javascript:;">密码登录</a>
+                    <a href="javascript:;"
+                       :class="{on:loginWay==='message'}"
+                       @click="loginWay = 'message'">短信登录</a>
+                    <a href="javascript:;"
+                       :class="{on:loginWay==='password'}"
+                       @click="loginWay = 'password'">密码登录</a>
                 </div>
             </div>
             <div class="login_content">
                 <form>
-                    <div class="on">
+                    <div :class="{on:loginWay==='message'}">
                         <section class="login_message">
-                            <input type="tel" maxlength="11" placeholder="手机号">
-                            <button disabled="disabled" class="get_verification" >获取验证码</button>
+                            <input v-model.trim="phoneNumber" type="tel" maxlength="11" placeholder="手机号">
+                            <button :disabled="!phoneNumberIsRight" class="get_verification"
+                                :class="{highLight:phoneNumberIsRight}"
+                                    @click.prevent="getCode">获取验证码</button>
                         </section>
                         <section class="login_verification">
                             <input type="tel" maxlength="8" placeholder="验证码">
@@ -23,7 +29,7 @@
                             <a href="javascript:;">《用户服务协议》</a>
                         </section>
                     </div>
-                    <div>
+                    <div :class="{on:loginWay==='password'}">
                         <section>
                             <section class="login_message">
                                 <input type="tel" maxlength="11" placeholder="手机/邮箱/用户名">
@@ -53,9 +59,33 @@
 </template>
 
 <script>
+   /*界面上的逻辑
+        1. 登录方式切换
+        2. 当手机号输入正确时;后面的文本得点亮
+        3. 倒计时
+        4. 密码的明文 密文的切换
+        5. 表单验证
+    */
+
+
     export default {
         name:"Login", //这个name是vue tools需要的
+        data(){
+          return {
+              loginWay:"message",
+              phoneReg:/^1\d{10}/igm,
+              phoneNumber:""
+          }
+        },
+        computed:{
+            phoneNumberIsRight(){
+                return this.phoneReg.test(this.phoneNumber)
+            }
+        },
         methods:{
+            getCode(){
+              console.log("getCode")
+            },
             //编程式导航
             goto(path){
                 this.$router.replace(path)
@@ -130,6 +160,9 @@
                                 color #ccc
                                 font-size 14px
                                 background transparent
+                                &.highLight
+                                    color green
+                                    font-weight 700
                         .login_verification
                             position relative
                             margin-top 16px
