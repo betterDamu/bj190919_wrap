@@ -26,7 +26,7 @@
                     </div>
                 </div>
                 <!-- Add Pagination -->
-                <div class="swiper-pagination"></div>
+                <div class="swiper-pagination" v-show="categoryArrs.length"></div>
             </div>
         </nav>
         <!--首页附近商家-->
@@ -235,30 +235,72 @@
             ...mapState(["addressObj","categories","imgBaseUrl"]),
             categoryArrs(){
                 //[[{}*8],[]]
+                /*当categoryArrs这个计算属性重新被调用时;说明对分类列表的请求已经成功
+                数据已经回来了;而且categories已经得到更新了*/
+
+                this.renderSwiper();//确保分类列表的数据得到更新了
+
                 return _.chunk(this.categories,8);
             }
         },
         methods:{
-            ...mapActions([GETADDRRSSOBJ,GETCATEGORIES])
-        },
-        mounted(){
-            //转发一个action
-            this[GETADDRRSSOBJ]();
-            this[GETCATEGORIES]();
+            ...mapActions([GETADDRRSSOBJ,GETCATEGORIES]),
+            renderSwiper(){
+                /*
+                    $nextTick 将回调延迟到下次 DOM 更新循环之后执行。
+                    在修改数据之后立即使用它，然后等待 DOM 更新。
 
-            //有可能界面还有没渲染成功
-            //这个时候调用swiper可能会滑不动
-            // 当一些动效库 需要保证在界面渲染完的情况下被初始化 在vue中我们有几个方案?
-            setTimeout(()=>{
-                new Swiper ('.swiper-container', {
-                    loop: true, // 循环模式选项
-                    // 如果需要分页器
-                    pagination: {
-                        el: '.swiper-pagination',
-                    }
-                })
-            },2000)
-        }
+                    vue 数据变化 --->
+                        更新dom树(内存模型 树 一种数据结构)
+                            -- 几微秒 执行nextTick的回调(有可能) -->
+                                真正的渲染(在浏览器上绘制图案)
+                                    执行nextTick的回调(有可能)
+                */
+                // this.$nextTick(()=>{
+                    //再加个没有延迟时间的定时器
+                    // setTimeout(()=>{
+                        new Swiper ('.swiper-container', {
+                            // 如果需要分页器
+                            pagination: {
+                                el: '.swiper-pagination',
+                            }
+                        })
+                    // },20)
+                // })
+            }
+        },
+        async mounted(){
+            //转发一个action
+            await this[GETADDRRSSOBJ]();
+            await this[GETCATEGORIES](this.renderSwiper);
+            //界面肯定已经更新了!!!!!
+            this.renderSwiper()
+
+
+            // 有可能界面还有没渲染成功
+            // 这个时候调用swiper可能会滑不动
+            //在数据更新界面还没有同步的情况下;可以使用nextTick来延迟一些操作
+            //当前情况下;有问题 因为在这个$nextTick被执行时  有可能this[GETCATEGORIES]()请求还没成功
+
+            /*当一些动效库 需要保证在界面渲染完的情况下被初始化 在vue中我们有几个方案?
+            *   核心思想. 当分类列表的数据得到更新时  再调用$nextTick
+            *           此时这个$nextTick肯定是分类列表管理的界面渲染时被调用
+            *
+            *   1. 计算属性 + $nextTick
+            *   2. watch + $nextTick
+            *   3. cb + $nextTick(依赖于vuex)
+            *
+            *   最好的方案: 等分类列表的数据所对应的界面!更新渲染完成之后!!!再去做轮播
+            *       当前这种方案要依赖于vuex
+            *       转发一个action 我们得到返回值是一个promise
+            *           action返回的promise 是在vue界面更新渲染成功之后 才会切换成成功状态
+            * */
+        },
+        /*watch:{
+            categories(){
+                this.renderSwiper() //确保分类列表的数据得到更新了
+            }
+        }*/
     }
 </script>
 
