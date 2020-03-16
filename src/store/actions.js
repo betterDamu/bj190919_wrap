@@ -1,4 +1,4 @@
-import {GETADDRRSSOBJ,GETCATEGORIES} from "./mutation_types"
+import {GETADDRRSSOBJ,GETCATEGORIES,GETSHOPS} from "./mutation_types"
 import http from "@/http"
 const OK = 0;
 export default {
@@ -12,7 +12,11 @@ export default {
         const body = await http.msite.getCategories();
         if (body.code === OK)
             store.commit(GETCATEGORIES,body.data)
-        //确保分类列表的数据得到更新了
-        // cb && cb()
+    },
+
+    async [GETSHOPS](store){
+        const body = await http.msite.getShops();
+        if (body.code === OK)
+            store.commit(GETSHOPS,body.data)
     }
 }

@@ -1,9 +1,12 @@
-import {GETADDRRSSOBJ,GETCATEGORIES} from "./mutation_types"
+import {GETADDRRSSOBJ,GETCATEGORIES,GETSHOPS} from "./mutation_types"
 export default {
     [GETADDRRSSOBJ](state,addressObj){
         state.addressObj = addressObj
     },
     [GETCATEGORIES](state,categories){
         state.categories = categories
+    },
+    [GETSHOPS](state,shops){
+        state.shops = shops
     }
 }

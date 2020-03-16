@@ -9,6 +9,11 @@ export default {
             url:"/index_category",
             method:"get",
             crosUrl:"/4000"
+        },
+        getShops:{
+            url:"/shops",
+            method:"get",
+            crosUrl:"/4000"
         }
     }
 }

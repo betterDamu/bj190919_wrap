@@ -3,5 +3,6 @@ export default {
     addressObj:{
         address:"123"
     },
-    categories:[]
+    categories:[],
+    shops:[]
 }
