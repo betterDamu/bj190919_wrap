@@ -4,6 +4,7 @@ function resolve (dir) {
 }
 module.exports={
     lintOnSave:false,
+    // ngix 在开发环境中的替身
     devServer:{
         port:3001,
         open:true,
