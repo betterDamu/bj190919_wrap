@@ -7,7 +7,11 @@ Vue.use(VeeValidate);
 VeeValidate.Validator.localize('zh_CN', {
     messages: zh_CN.messages,
     attributes: {
-        phone: '手机号'
+        phone: '手机号',
+        code:"验证码",
+        name:"用户名",
+        pwd:"密码",
+        captcha:"验证码"
     }
 })
 

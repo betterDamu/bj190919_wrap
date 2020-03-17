@@ -25,7 +25,9 @@
                                     @click.prevent="getCode">{{times>0?`验证码已发送(${times}s)`:`获取验证码`}}</button>
                         </section>
                         <section class="login_verification">
-                            <input type="tel" maxlength="8" placeholder="验证码">
+                            <input type="tel" maxlength="6" placeholder="验证码"
+                                   v-model="code" name="code" v-validate="{required: true,regex: /^\d{6}$/}" >
+                            <span style="color: red;" v-show="errors.has('code')">{{ errors.first('code') }}</span>
                         </section>
                         <section class="login_hint">
                             温馨提示：未注册硅谷外卖帐号的手机号，登录时将自动注册，且代表已同意
@@ -35,22 +37,29 @@
                     <div :class="{on:loginWay==='password'}">
                         <section>
                             <section class="login_message">
-                                <input type="tel" maxlength="11" placeholder="手机/邮箱/用户名">
+                                <input type="tel" maxlength="11" placeholder="手机/邮箱/用户名"
+                                       v-model="name" name="name" v-validate="'required'">
+                                <span style="color: red;" v-show="errors.has('name')">{{ errors.first('name') }}</span>
                             </section>
                             <section class="login_verification">
-                                <input :type="right?`text`:`password`" maxlength="8" placeholder="密码">
+                                <input :type="right?`text`:`password`" v-model="pwd"
+                                       maxlength="8" placeholder="密码" name="pwd" v-validate="'required'" >
                                 <div class="switch_button" :class="right?`on`:`off`" @click="right=!right">
                                     <div class="switch_circle" :class="{right:right}"></div>
                                     <span class="switch_text">abc</span>
                                 </div>
+                                <span style="color: red;" v-show="errors.has('pwd')">{{ errors.first('pwd') }}</span>
                             </section>
                             <section class="login_message">
-                                <input type="text" maxlength="11" placeholder="验证码">
-                                <img class="get_verification" src="./images/captcha.svg" alt="captcha">
+                                <input type="text" maxlength="4" placeholder="验证码" v-model="captcha"
+                                        name="captcha" v-validate="{required: true,regex: /^[0-9a-zA-Z]{4}$/}">
+                                <img class="get_verification" ref="captchaImg"
+                                     :src="captchaUrl" alt="captcha" @click="getCaptcha">
+                                <span style="color: red;" v-show="errors.has('captcha')">{{ errors.first('captcha') }}</span>
                             </section>
                         </section>
                     </div>
-                    <button class="login_submit">登录</button>
+                    <button class="login_submit" @click.prevent="login">登录</button>
                 </form>
                 <a href="javascript:;" class="about_us">关于我们</a>
             </div>
@@ -70,16 +79,49 @@
         5. 表单验证
     */
 
+   /*
+    数据请求
+       1. 一次性图片验证码
+            不发ajax请求
+       2. 一次性短信验证码
+            倒计时要停
+       3. 两种登录
+           登录成功之后要将用户信息保存
+           登录成功之后要跳转到个人中心
+           登录失败之后提示失败
+           用户名,密码
+           登录失败之后要更新验证码
+       4. 退出登录
+            将用户信息清空
+       5. 携带token登录
+           登录时将token存入到local中
+           登录时将token交给vuex来管理
+           退出时 将user 和 token清除 并将local清除
+           处理一些请求时需要携带token的接口
+           没有token 请求进入失败流程 跳转回登录页
+           拥有token token没有失效 则携带上token(Authorization)
+           拥有token 可是token已经失效 跳转回登录页
+       6. 自动登录
+    */
 
     export default {
         name:"Login", //这个name是vue tools需要的
         data(){
           return {
-              loginWay:"message",  //登录方式切换需要的数据
+              loginWay:"password",  //登录方式切换需要的数据
               phoneReg:/^1\d{10}/igm, //文本点亮需要的依赖数据
               phoneNumber:"", //文本点亮需要的依赖数据
               times:0,//倒计时需要的数据
-              right:false//明文切换需要的数据
+              right:false,//明文切换需要的数据
+
+              code:"",//短信6位验证码
+              name:"",//用户名
+              pwd:"",//密码
+              captcha:"",//图片四位验证码
+
+              //在互联网中的所有资源 它的唯一性标识就是url
+              //前后访问的url一样 浏览器就会使用缓存
+              captchaUrl:"http://localhost:4000/captcha"
           }
         },
         computed:{
@@ -89,6 +131,31 @@
             }
         },
         methods:{
+            getCaptcha(){
+                this.$refs.captchaImg.src = this.captchaUrl +"?"+new Date().getTime();
+            },
+
+            async login(){
+                //对表单进行强制检验  检验不通过 不让登陆
+                if(this.loginWay === "message"){
+                    //检验2个表单
+                    let messageFlag = await this.$validator.validateAll(["phone","code"]);
+                    if(messageFlag){
+                        //短信登陆
+                    }
+
+                }else if(this.loginWay === "password"){
+                    //检验3个表单
+                    let passwordFlag = await this.$validator.validateAll(["name","pwd","captcha"]);
+                    console.log(passwordFlag)
+                    if(passwordFlag){
+                        //短信登陆
+                    }
+                }
+
+
+            },
+
             getCode(){
                 //进行倒计时
                 //对于倒计时功能 只需要开启一个循环定时器
