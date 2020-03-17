@@ -82,15 +82,19 @@
    /*
     数据请求
        1. 一次性图片验证码
-            不发ajax请求
+            不发ajax请求  而是一个纯的http请求
        2. 一次性短信验证码
+            ---> https://www.yuntongxun.com/member/main
+                将组件账号的配置 覆盖 后台应用中的配置util/sms_util.js
+                添加测试号码
             倒计时要停
        3. 两种登录
-           登录成功之后要将用户信息保存
-           登录成功之后要跳转到个人中心
-           登录失败之后提示失败
+           短信
+               登录成功之后要将用户信息保存
+               登录成功之后要跳转到个人中心
+               登录失败之后提示失败
            用户名,密码
-           登录失败之后要更新验证码
+                登录失败之后要更新验证码
        4. 退出登录
             将用户信息清空
        5. 携带token登录
@@ -103,12 +107,14 @@
            拥有token 可是token已经失效 跳转回登录页
        6. 自动登录
     */
-
+    import {Toast} from  "vant";
+    const OK = 0;
+    const ERROR = 1;
     export default {
         name:"Login", //这个name是vue tools需要的
         data(){
           return {
-              loginWay:"password",  //登录方式切换需要的数据
+              loginWay:"message",  //登录方式切换需要的数据
               phoneReg:/^1\d{10}/igm, //文本点亮需要的依赖数据
               phoneNumber:"", //文本点亮需要的依赖数据
               times:0,//倒计时需要的数据
@@ -156,11 +162,11 @@
 
             },
 
-            getCode(){
+            async getCode(){
                 //进行倒计时
                 //对于倒计时功能 只需要开启一个循环定时器
                 clearInterval(this.timerId)
-                this.times = 10;
+                this.times = 30;
                 this.timerId = setInterval(()=>{
                     if(this.times>0)
                         this.times--
@@ -168,6 +174,16 @@
                         clearInterval(this.timerId)
                 },1000)
 
+                //获取验证码
+                const body = await this.$http.login.getCode({
+                    phone:this.phoneNumber
+                })
+                if(body.code === OK)
+                    Toast.success("验证码发送成功")
+                else if(body.code === ERROR)
+                    Toast.fail("验证码发送失败")
+
+                // this.times = 0;
             },
             //编程式导航
             goto(path){
