@@ -4,6 +4,16 @@ export default {
             url:"/sendcode",
             method:"get",
             crosUrl:"/4000"
+        },
+        loginByUserAndPwd:{
+            url:"/login_pwd",
+            method:"post",
+            crosUrl:"/4000"
+        },
+        loginBySms:{
+            url:"/login_sms",
+            method:"post",
+            crosUrl:"/4000"
         }
     }
 }

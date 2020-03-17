@@ -71,6 +71,14 @@
 </template>
 
 <script>
+   /*
+        前端工程师去公司装的环境:
+            1. node
+            2. npm
+            3. git
+            4. 编辑器
+            5. postman
+    */
    /*界面上的逻辑
         1. 登录方式切换
         2. 当手机号输入正确时;后面的文本得点亮
@@ -78,7 +86,6 @@
         4. 密码的明文 密文的切换
         5. 表单验证
     */
-
    /*
     数据请求
        1. 一次性图片验证码
@@ -89,12 +96,15 @@
                 添加测试号码
             倒计时要停
        3. 两种登录
-           短信
-               登录成功之后要将用户信息保存
+           手机,短信
+               登录成功之后要将用户信息保存(仓库)
                登录成功之后要跳转到个人中心
                登录失败之后提示失败
            用户名,密码
-                登录失败之后要更新验证码
+               登录成功之后要将用户信息保存(仓库)
+               登录成功之后要跳转到个人中心
+               登录失败之后提示失败
+               登录失败之后要更新验证码
        4. 退出登录
             将用户信息清空
        5. 携带token登录
@@ -107,6 +117,8 @@
            拥有token 可是token已经失效 跳转回登录页
        6. 自动登录
     */
+    import {GETUSER} from "@/store/mutation_types.js"
+    import {mapActions} from "vuex";
     import {Toast} from  "vant";
     const OK = 0;
     const ERROR = 1;
@@ -137,10 +149,15 @@
             }
         },
         methods:{
-            getCaptcha(){
-                this.$refs.captchaImg.src = this.captchaUrl +"?"+new Date().getTime();
-            },
+            /*请求在哪边发送:
+                如果请求回来的数据要在界面上显示
+                    如果项目用了vuex
+                        : 请求在action中发 数据要交给vuex管理
+                    如果项目没有使用vuex
+                        : 请求在组件的生命周期中发 数据交给data*/
+            ...mapActions([GETUSER]),
 
+            //两种登录
             async login(){
                 //对表单进行强制检验  检验不通过 不让登陆
                 if(this.loginWay === "message"){
@@ -148,20 +165,34 @@
                     let messageFlag = await this.$validator.validateAll(["phone","code"]);
                     if(messageFlag){
                         //短信登陆
+                        this[GETUSER]({
+                            loginWay:this.loginWay,
+                            phone:this.phoneNumber,
+                            code:this.code
+                        })
                     }
 
                 }else if(this.loginWay === "password"){
                     //检验3个表单
                     let passwordFlag = await this.$validator.validateAll(["name","pwd","captcha"]);
-                    console.log(passwordFlag)
                     if(passwordFlag){
-                        //短信登陆
+                        //用户名密码登录
+                        this[GETUSER]({
+                            loginWay:this.loginWay,
+                            name:this.name,
+                            pwd:this.pwd,
+                            captcha:this.captcha
+                        })
                     }
                 }
 
 
             },
-
+            //获取图片验证码
+            getCaptcha(){
+                this.$refs.captchaImg.src = this.captchaUrl +"?"+new Date().getTime();
+            },
+            //发送短信
             async getCode(){
                 //进行倒计时
                 //对于倒计时功能 只需要开启一个循环定时器
@@ -185,7 +216,7 @@
 
                 // this.times = 0;
             },
-            //编程式导航
+            //编程式路由
             goto(path){
                 this.$router.replace(path)
                 //this.$router.push    记录下来每一次push的位置 栈
