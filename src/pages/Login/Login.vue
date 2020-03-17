@@ -181,12 +181,11 @@
                             loginWay:this.loginWay,
                             name:this.name,
                             pwd:this.pwd,
-                            captcha:this.captcha
+                            captcha:this.captcha,
+                            getCaptcha:this.getCaptcha
                         })
                     }
                 }
-
-
             },
             //获取图片验证码
             getCaptcha(){
