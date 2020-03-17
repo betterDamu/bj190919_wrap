@@ -16,7 +16,10 @@
                 <form>
                     <div :class="{on:loginWay==='message'}">
                         <section class="login_message">
-                            <input v-model.trim="phoneNumber" type="tel" maxlength="11" placeholder="手机号">
+                            <input v-model.trim="phoneNumber" type="tel"
+                                   maxlength="11" placeholder="手机号"
+                                    name="phone" v-validate="'required|mobile'">
+                            <span style="color: red;" v-show="errors.has('phone')">{{ errors.first('phone') }}</span>
                             <button :disabled="!phoneNumberIsRight || (times>0)" class="get_verification"
                                 :class="{highLight:phoneNumberIsRight}"
                                     @click.prevent="getCode">{{times>0?`验证码已发送(${times}s)`:`获取验证码`}}</button>
@@ -35,10 +38,10 @@
                                 <input type="tel" maxlength="11" placeholder="手机/邮箱/用户名">
                             </section>
                             <section class="login_verification">
-                                <input type="tel" maxlength="8" placeholder="密码">
-                                <div class="switch_button off">
-                                    <div class="switch_circle"></div>
-                                    <span class="switch_text">...</span>
+                                <input :type="right?`text`:`password`" maxlength="8" placeholder="密码">
+                                <div class="switch_button" :class="right?`on`:`off`" @click="right=!right">
+                                    <div class="switch_circle" :class="{right:right}"></div>
+                                    <span class="switch_text">abc</span>
                                 </div>
                             </section>
                             <section class="login_message">
@@ -75,7 +78,8 @@
               loginWay:"message",  //登录方式切换需要的数据
               phoneReg:/^1\d{10}/igm, //文本点亮需要的依赖数据
               phoneNumber:"", //文本点亮需要的依赖数据
-              times:0//倒计时需要的数据
+              times:0,//倒计时需要的数据
+              right:false//明文切换需要的数据
           }
         },
         computed:{
@@ -203,7 +207,6 @@
                                 &.on
                                     background #02a774
                                 >.switch_circle
-                                    //transform translateX(27px)
                                     position absolute
                                     top -1px
                                     left -1px
@@ -214,6 +217,8 @@
                                     background #fff
                                     box-shadow 0 2px 4px 0 rgba(0,0,0,.1)
                                     transition transform .3s
+                                    &.right
+                                        transform translateX(27px)
                         .login_hint
                             margin-top 12px
                             color #999

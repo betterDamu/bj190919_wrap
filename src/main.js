@@ -5,6 +5,8 @@ import http from "@/http"
 import router from "@/router"
 import store from "@/store"
 
+import "@/util/validate.js"
+
 
 //注册vue的全局组件
 import HeaderTop from "components/HeaderTop/HeaderTop.vue"
