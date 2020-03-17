@@ -98,11 +98,12 @@
        3. 两种登录
            手机,短信
                登录成功之后要将用户信息保存(仓库)
-               登录成功之后要跳转到个人中心
+               登录成功之后要跳转到个人中心(登录信息回显)
+               登录成功之后要更新验证码
                登录失败之后提示失败
            用户名,密码
                登录成功之后要将用户信息保存(仓库)
-               登录成功之后要跳转到个人中心
+               登录成功之后要跳转到个人中心(登录信息回显)
                登录失败之后提示失败
                登录失败之后要更新验证码
        4. 退出登录
@@ -113,8 +114,8 @@
            退出时 将user 和 token清除 并将local清除
            处理一些请求时需要携带token的接口
            没有token 请求进入失败流程 跳转回登录页
-           拥有token token没有失效 则携带上token(Authorization)
            拥有token 可是token已经失效 跳转回登录页
+           拥有token token没有失效 则携带上token(Authorization)
        6. 自动登录
     */
     import {GETUSER} from "@/store/mutation_types.js"
@@ -139,7 +140,7 @@
 
               //在互联网中的所有资源 它的唯一性标识就是url
               //前后访问的url一样 浏览器就会使用缓存
-              captchaUrl:"http://localhost:4000/captcha"
+              captchaUrl:`http://localhost:4000/captcha?${new Date().getTime()}`
           }
         },
         computed:{

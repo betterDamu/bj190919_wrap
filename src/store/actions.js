@@ -5,9 +5,14 @@ import {Toast} from "vant"
 const OK = 0;
 const ERROR = 1;
 
-function loginSuccess(commit,user){
+function loginSuccess(commit,loginWay,getCaptcha,user){
     //将用户的信息保存到仓库中
     commit(GETUSER,user)
+
+    //如果是通过用户名 密码登录的 登录成功之后 要 更新图片验证码
+    if (loginWay==="password")
+        getCaptcha()
+
     //登录成功之后要跳转到个人中心(编程式路由进行跳转)
     router.replace("/Profile")
 
@@ -60,7 +65,7 @@ export default {
             })
         }
 
-        body.code === OK && loginSuccess(commit,body.data)
+        body.code === OK && loginSuccess(commit,loginWay,getCaptcha,body.data)
         body.code === ERROR && loginFail(loginWay,getCaptcha)
     }
 }
