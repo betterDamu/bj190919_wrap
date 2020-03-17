@@ -17,9 +17,9 @@
                     <div :class="{on:loginWay==='message'}">
                         <section class="login_message">
                             <input v-model.trim="phoneNumber" type="tel" maxlength="11" placeholder="手机号">
-                            <button :disabled="!phoneNumberIsRight" class="get_verification"
+                            <button :disabled="!phoneNumberIsRight || (times>0)" class="get_verification"
                                 :class="{highLight:phoneNumberIsRight}"
-                                    @click.prevent="getCode">获取验证码</button>
+                                    @click.prevent="getCode">{{times>0?`验证码已发送(${times}s)`:`获取验证码`}}</button>
                         </section>
                         <section class="login_verification">
                             <input type="tel" maxlength="8" placeholder="验证码">
@@ -62,7 +62,7 @@
    /*界面上的逻辑
         1. 登录方式切换
         2. 当手机号输入正确时;后面的文本得点亮
-        3. 倒计时
+        3. 倒计时(在倒计时的时候 获取验证码的这个按钮应该要处于禁用状态)
         4. 密码的明文 密文的切换
         5. 表单验证
     */
@@ -72,19 +72,31 @@
         name:"Login", //这个name是vue tools需要的
         data(){
           return {
-              loginWay:"message",
-              phoneReg:/^1\d{10}/igm,
-              phoneNumber:""
+              loginWay:"message",  //登录方式切换需要的数据
+              phoneReg:/^1\d{10}/igm, //文本点亮需要的依赖数据
+              phoneNumber:"", //文本点亮需要的依赖数据
+              times:0//倒计时需要的数据
           }
         },
         computed:{
+            //文本点亮需要的数据
             phoneNumberIsRight(){
                 return this.phoneReg.test(this.phoneNumber)
             }
         },
         methods:{
             getCode(){
-              console.log("getCode")
+                //进行倒计时
+                //对于倒计时功能 只需要开启一个循环定时器
+                clearInterval(this.timerId)
+                this.times = 10;
+                this.timerId = setInterval(()=>{
+                    if(this.times>0)
+                        this.times--
+                    else
+                        clearInterval(this.timerId)
+                },1000)
+
             },
             //编程式导航
             goto(path){

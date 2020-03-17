@@ -121,6 +121,7 @@
         },
         async mounted(){
             this[GETADDRRSSOBJ]();
+            // this.$store.dispacth(GETADDRRSSOBJ)
 
             await this[GETCATEGORIES](this.renderSwiper);
             this.renderSwiper();
