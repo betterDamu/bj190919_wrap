@@ -1,4 +1,4 @@
-import {GETADDRRSSOBJ,GETCATEGORIES,GETSHOPS,GETUSER} from "./mutation_types"
+import {GETADDRRSSOBJ,GETCATEGORIES,GETSHOPS,GETUSER,RESTUSER} from "./mutation_types";
 import router from "@/router"
 import http from "@/http"
 import {Toast} from "vant"
@@ -7,11 +7,16 @@ const ERROR = 1;
 
 function loginSuccess(commit,loginWay,getCaptcha,user){
     //将用户的信息保存到仓库中
+    //补一补:将token保存到仓库中
     commit(GETUSER,user)
 
     //如果是通过用户名 密码登录的 登录成功之后 要 更新图片验证码
     if (loginWay==="password")
         getCaptcha()
+
+    //将token持久化
+    localStorage.setItem("ele-token",user.token)
+
 
     //登录成功之后要跳转到个人中心(编程式路由进行跳转)
     router.replace("/Profile")
@@ -67,5 +72,9 @@ export default {
 
         body.code === OK && loginSuccess(commit,loginWay,getCaptcha,body.data)
         body.code === ERROR && loginFail(loginWay,getCaptcha)
+    },
+
+    [RESTUSER]({commit}){
+        commit(RESTUSER)
     }
 }

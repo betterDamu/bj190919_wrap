@@ -1,12 +1,31 @@
 <template>
-    <div>
-        userDetail
+    <div style="text-align: center">
+        <van-button type="primary" style="margin-top: 150px"
+                    @click="exit">退出登录</van-button>
     </div>
 </template>
 
 <script>
+    import { Button } from 'vant';
+    import {mapActions} from "vuex";
+    import {RESTUSER} from "@/store/mutation_types";
+    import router from "@/router";
     export default {
-        name: "UserDetail"
+        name: "UserDetail",
+        components:{
+            [Button.name]:Button
+        },
+        methods:{
+            ...mapActions([RESTUSER]),
+            exit(){
+                //将用户信息清空 vuex
+                this[RESTUSER]()
+                //清除loacl中的token
+                localStorage.removeItem("ele-token")
+                //跳回登录页
+                router.replace("/Login")
+            }
+        }
     }
 </script>
 

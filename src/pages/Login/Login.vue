@@ -107,11 +107,12 @@
                登录失败之后提示失败
                登录失败之后要更新验证码
        4. 退出登录
-            将用户信息清空
-       5. 携带token登录
-           登录时将token存入到local中
-           登录时将token交给vuex来管理
+            将用户信息(user)清空
+       5. 考虑token
+           登录成功时将token存入到local中(token的持久化)
+           登录成功时将token交给vuex来管理
            退出时 将user 和 token清除 并将local清除
+
            处理一些请求时需要携带token的接口
            没有token 请求进入失败流程 跳转回登录页
            拥有token 可是token已经失效 跳转回登录页
