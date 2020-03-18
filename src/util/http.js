@@ -8,7 +8,7 @@ export default (axios,config={})=>{
     const api = config.api;
 
     for(let name in api){
-        let {url,method,isForm,hooks,crosUrl} =api[name];
+        let {url,method,isForm,hooks,crosUrl,token} =api[name];
         if(hooks){
             api[name].beforeReq = hooks.beforeReq;
             api[name].AfterReq = hooks.AfterReq;
@@ -38,6 +38,14 @@ export default (axios,config={})=>{
             }
 
 
+            /*
+                前端向后退传递数据的方式
+                    1. params    localhsot:8080/a/b/params1/params2
+                    2. query(key=val)     localhsot:8080/a/b?query1&query2
+                    3. 请求头
+            */
+
+
             let body = "";
             switch (method){
                 case "get":
@@ -46,7 +54,10 @@ export default (axios,config={})=>{
                     body = await axios({
                         url,
                         method,
-                        params:transformData
+                        params:transformData,
+                        headers:{
+                            Authorization:token
+                        }
                     })
                     api[name].AfterReq && api[name].AfterReq()
                     break;
@@ -56,7 +67,11 @@ export default (axios,config={})=>{
                     body = await axios({
                         url,
                         method,
-                        data:transformData
+                        data:transformData,
+                        headers:{
+                            Authorization:token,
+                            damu:"damu"
+                        }
                     })
                     api[name].AfterReq && api[name].AfterReq()
                     break;
