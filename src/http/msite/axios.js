@@ -12,6 +12,13 @@ const contact = axios.create({
 contact.interceptors.request.use(function (axiosConfig) {
     loading();
     config.hooks && config.hooks.beforeReq && config.hooks.beforeReq();
+
+    //为msite模块定义一些个性化的业务逻辑
+    //分类列表 商家列表的请求 是需要携带token
+    if(axiosConfig.url === "/4000/index_category" || axiosConfig.url === "/4000/shops"){
+        axiosConfig.headers.Authorization = localStorage.getItem("ele-token")
+    }
+
     return axiosConfig;
 });
 

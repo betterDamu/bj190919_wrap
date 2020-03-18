@@ -114,10 +114,11 @@
            退出时 将user 和 token清除 并将local清除
 
            处理一些请求时需要携带token的接口
-           没有token 请求进入失败流程 跳转回登录页
-           拥有token 可是token已经失效 跳转回登录页
-           拥有token token没有失效 则携带上token(Authorization)
+                拥有token token没有失效 则携带上token(Authorization)
+                去访问主页上的分类列表 以及 商家列表
        6. 自动登录
+            没有token 请求进入失败流程 跳转回登录页
+            拥有token 可是token已经失效 跳转回登录页
     */
     import {GETUSER} from "@/store/mutation_types.js"
     import {mapActions} from "vuex";

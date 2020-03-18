@@ -9,6 +9,8 @@ export default {
             url:"/index_category",
             method:"get",
             crosUrl:"/4000"
+            //将token也得配置化
+            //因为vue项目的整个http模块的封装程度是很高的
         },
         getShops:{
             url:"/shops",
