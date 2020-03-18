@@ -1,5 +1,4 @@
-const token = localStorage.getItem("ele-token");
-console.log(token);
+// const token = localStorage.getItem("ele-token");
 export default {
     api:{
         getCode:{
@@ -21,7 +20,9 @@ export default {
             url:"/auto_login",
             method:"get",
             crosUrl:"/4000",
-            token,
+            token(){
+                return localStorage.getItem("ele-token")
+            },
         }
     }
 }

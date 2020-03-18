@@ -44,10 +44,11 @@ export default (axios,config={})=>{
                     2. query(key=val)     localhsot:8080/a/b?query1&query2
                     3. 请求头
             */
-            if(token === null || token===undefined){
-                token = ""
+            let Authorization = token&&token();
+            if( Authorization === null || Authorization===undefined){
+                Authorization = ""
             }
-            console.log(token);
+
             let body = "";
             switch (method){
                 case "get":
@@ -58,7 +59,7 @@ export default (axios,config={})=>{
                         method,
                         params:transformData,
                         headers:{
-                            Authorization:token
+                            Authorization:Authorization
                         }
                     })
                     api[name].AfterReq && api[name].AfterReq()

@@ -5,6 +5,7 @@ import http from "@/http"
 import {Toast} from "vant"
 const OK = 0;
 const ERROR = 1;
+const NOTOKEN = 1;
 
 function loginSuccess(commit,loginWay,getCaptcha,user){
     //将用户的信息保存到仓库中
@@ -82,13 +83,29 @@ export default {
     async [AUTOLOGIN]({commit}){
        try {
            const body = await http.login.autoLogin();
-           if(body.code === 0 ){
-               //正常的自动登录
-           }else if(body.code === 1){
-               //没有携带token
+           if(body.code === OK ){
+               //正常的自动登录; 应该去覆盖user
+               commit(AUTOLOGIN,body.data)
+           }else if(body.code === NOTOKEN){
+               //没有携带token 先给一个提示 应该跳转到登录页
+
+               alert(body.msg);
+               router.replace("/Login");
+
+               // 这边不能使用Toast 会被模块内部的Toast覆盖掉
+               // Toast.fail({
+               //     message:body.msg,
+               //     duration:3000,
+               //     onClose(){
+               //         router.replace("/Login");
+               //     }
+               // })
+
            }
        }catch (e) {
-           //代表token过期
+           //代表token过期 先给一个提示 应该跳转到登录页
+           alert(e.response.data.message);
+           router.replace("/Login");
        }
     }
 }

@@ -23,7 +23,7 @@ contact.interceptors.request.use(function (axiosConfig) {
 });
 
 contact.interceptors.response.use(function (response) {
-    success();
+    success(); // 最好最近实现一个轻提示的UI控件 让Toast交给我们的业务逻辑使用!!!
     config.hooks && config.hooks.AfterReq && config.hooks.AfterReq();
     return response.data;
 }, function (error) {
