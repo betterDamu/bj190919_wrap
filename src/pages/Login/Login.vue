@@ -117,6 +117,7 @@
                 拥有token token没有失效 则携带上token(Authorization)
                 去访问主页上的分类列表 以及 商家列表
        6. 自动登录
+            有token token没有失效 则携带上token(Authorization)
             没有token 请求进入失败流程 跳转回登录页
             拥有token 可是token已经失效 跳转回登录页
     */

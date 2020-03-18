@@ -1,3 +1,5 @@
+const token = localStorage.getItem("ele-token");
+console.log(token);
 export default {
     api:{
         getCode:{
@@ -14,6 +16,12 @@ export default {
             url:"/login_sms",
             method:"post",
             crosUrl:"/4000"
+        },
+        autoLogin:{
+            url:"/auto_login",
+            method:"get",
+            crosUrl:"/4000",
+            token,
         }
     }
 }

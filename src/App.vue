@@ -6,8 +6,9 @@
 </template>
 
 <script>
-  import {mapState} from "vuex";
+  import {mapState,mapActions} from "vuex";
   import FooterGuide from "components/FooterGuide/FooterGuide.vue"
+  import {AUTOLOGIN} from "@/store/mutation_types";
   export default {
     name: 'App',
     computed:{
@@ -15,6 +16,13 @@
     },
     components:{
         FooterGuide,
+    },
+    methods:{
+        ...mapActions([AUTOLOGIN])
+    },
+    created(){
+        //登录过一次后;只要token没有失效 以后都自动登录
+        this[AUTOLOGIN]();
     }
   }
 </script>

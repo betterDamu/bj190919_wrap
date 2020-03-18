@@ -44,8 +44,10 @@ export default (axios,config={})=>{
                     2. query(key=val)     localhsot:8080/a/b?query1&query2
                     3. 请求头
             */
-
-
+            if(token === null || token===undefined){
+                token = ""
+            }
+            console.log(token);
             let body = "";
             switch (method){
                 case "get":
@@ -69,8 +71,7 @@ export default (axios,config={})=>{
                         method,
                         data:transformData,
                         headers:{
-                            Authorization:token,
-                            damu:"damu"
+                            Authorization:token
                         }
                     })
                     api[name].AfterReq && api[name].AfterReq()

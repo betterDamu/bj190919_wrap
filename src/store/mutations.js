@@ -1,4 +1,5 @@
-import {GETADDRRSSOBJ,GETCATEGORIES,GETSHOPS,GETUSER,RESTUSER} from "./mutation_types"
+import {GETADDRRSSOBJ,GETCATEGORIES,
+    GETSHOPS,GETUSER,RESTUSER,AUTOLOGIN} from "./mutation_types"
 export default {
     [GETADDRRSSOBJ](state,addressObj){
         state.addressObj = addressObj
@@ -16,5 +17,8 @@ export default {
     [RESTUSER](state){
         state.user={};
         state.token = "";
+    },
+    [AUTOLOGIN](state,user){
+        state.user = user
     }
 }

@@ -1,4 +1,5 @@
-import {GETADDRRSSOBJ,GETCATEGORIES,GETSHOPS,GETUSER,RESTUSER} from "./mutation_types";
+import {GETADDRRSSOBJ,GETCATEGORIES,
+    GETSHOPS,GETUSER,RESTUSER,AUTOLOGIN} from "./mutation_types";
 import router from "@/router"
 import http from "@/http"
 import {Toast} from "vant"
@@ -76,5 +77,18 @@ export default {
 
     [RESTUSER]({commit}){
         commit(RESTUSER)
+    },
+
+    async [AUTOLOGIN]({commit}){
+       try {
+           const body = await http.login.autoLogin();
+           if(body.code === 0 ){
+               //正常的自动登录
+           }else if(body.code === 1){
+               //没有携带token
+           }
+       }catch (e) {
+           //代表token过期
+       }
     }
 }
