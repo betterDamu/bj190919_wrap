@@ -18,13 +18,19 @@
         methods:{
             ...mapActions([RESTUSER]),
             exit(){
-                //将用户信息清空 vuex
-                this[RESTUSER]()
-                //清除loacl中的token
-                localStorage.removeItem("ele-token")
-                //跳回登录页
-                router.replace("/Login")
+                // //将用户信息清空 vuex
+                // this[RESTUSER]()
+                // //清除loacl中的token
+                // localStorage.removeItem("ele-token")
+                // //跳回登录页
+                // router.replace("/Login")
+
+                router.push("/Defined")
             }
+        },
+        beforeRouteLeave (to, from, next) {
+            console.log("UserDetail组件内部 的 beforeRouteLeave")
+            next()
         }
     }
 </script>

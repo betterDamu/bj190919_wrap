@@ -22,7 +22,7 @@
     },
     created(){
         //登录过一次后;只要token没有失效 以后都自动登录
-        this[AUTOLOGIN]();
+        // this[AUTOLOGIN]();
     }
   }
 </script>

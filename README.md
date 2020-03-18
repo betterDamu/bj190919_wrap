@@ -64,9 +64,9 @@
     vuex  整体再加强
             (将layout改成vuex管理;所有的vuex数据统一模块化管理)
     vue-router
+          路由守卫
           路由懒加载
           keep-alive
-          路由守卫
     this 闭包 属性 复习
 
 
